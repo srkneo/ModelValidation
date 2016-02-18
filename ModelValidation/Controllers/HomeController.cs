@@ -17,20 +17,20 @@ namespace ModelValidation.Controllers
         [HttpPost]
         public ViewResult MakeBooking(Appointment appt)
         {
-            if(string.IsNullOrEmpty(appt.ClientName))
-            {
-                ModelState.AddModelError("ClientName", "Please enter your name");
-            }
+            //if(string.IsNullOrEmpty(appt.ClientName))
+            //{
+            //    ModelState.AddModelError("ClientName", "Please enter your name");
+            //}
 
-            if(ModelState.IsValidField("Date") && DateTime.Now > appt.Date)
-            {
-                ModelState.AddModelError("Date", "Please Enter Date in Future");
-            }
+            //if(ModelState.IsValidField("Date") && DateTime.Now > appt.Date)
+            //{
+            //    ModelState.AddModelError("Date", "Please Enter Date in Future");
+            //}
 
-            if(!appt.TermAccepted)
-            {
-                ModelState.AddModelError("TermAccepted", "You must accept the terms");
-            }
+            //if(!appt.TermAccepted)
+            //{
+            //    ModelState.AddModelError("TermAccepted", "You must accept the terms");
+            //}
 
             if(ModelState.IsValid)
             {
@@ -40,6 +40,24 @@ namespace ModelValidation.Controllers
             {
                 return View();
             }            
+        }
+
+        public JsonResult ValidateDate(string Date)
+        {
+            DateTime parsedDate;
+
+            if(!DateTime.TryParse(Date, out parsedDate))
+            {
+                return Json("Please enter a valid date (mm/dd/yyyy)", JsonRequestBehavior.AllowGet);
+            }
+            else if (DateTime.Now > parsedDate)
+            {
+                return Json("Please enter a date in future", JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
         }
 	}
 }
